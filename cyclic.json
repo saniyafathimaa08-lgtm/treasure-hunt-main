@@ -1,0 +1,13 @@
+{
+  "name": "iedc-treasure-hunt-backend",
+  "version": "1.0.0",
+  "description": "IEDC Treasure Hunt Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm install && npx prisma generate"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
