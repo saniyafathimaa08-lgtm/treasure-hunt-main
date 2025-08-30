@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // or "postgresql" / "mysql" if you use another DB
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id        Int       @id @default(autoincrement())
+  teamName  String    @unique
+  password  String
+  members   Member[]
+  selfies   Selfie[]
+  steps     TeamLocationStep[]
+  progress  TeamProgress?
+  createdAt DateTime  @default(now())
+}
+
+model Member {
+  id        Int      @id @default(autoincrement())
+  name      String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    Int
+  createdAt DateTime @default(now())
+}
+
+model Selfie {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  location  Location? @relation(fields: [locationId], references: [id])
+  locationId Int?
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    Int
+  createdAt DateTime @default(now())
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  code      String   @unique // QR content to verify location
+  order     Int
+  selfies   Selfie[]
+  steps     TeamLocationStep[]
+  riddles   Riddle[]
+  isFinal   Boolean  @default(false)
+}
+
+model TeamLocationStep {
+  id         Int      @id @default(autoincrement())
+  team       Team     @relation(fields: [teamId], references: [id])
+  teamId     Int
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
+  position   Int      // order in path
+  riddle     Riddle?  @relation(fields: [riddleId], references: [id])
+  riddleId   Int?
+}
+
+model TeamProgress {
+  id            Int      @id @default(autoincrement())
+  team          Team     @relation(fields: [teamId], references: [id])
+  teamId        Int      @unique
+  currentIndex  Int      @default(0) // index in TeamLocationStep
+  lastUpdatedAt DateTime @default(now())
+}
+
+model Riddle {
+  id          Int       @id @default(autoincrement())
+  text        String
+  location    Location  @relation(fields: [locationId], references: [id])
+  locationId  Int
+  createdAt   DateTime  @default(now())
+  steps       TeamLocationStep[]
+}
