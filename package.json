@@ -7,7 +7,9 @@
     "start": "node server.js",
     "dev": "node server.js",
     "build": "echo 'No build step required'",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate",
+    "db:migrate": "npx prisma migrate deploy",
+    "db:seed": "node -e \"import('./server.js').then(m => m.seedLocationsIfEmpty())\""
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
