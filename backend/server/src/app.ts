@@ -5,7 +5,10 @@ import bodyParser from 'body-parser';
 import { PrismaClient } from '@prisma/client';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+	origin: 'https://treasure-hunt2.netlify.app',
+	credentials: true
+}));
 app.use(bodyParser.json());
 
 const prisma = new PrismaClient();
