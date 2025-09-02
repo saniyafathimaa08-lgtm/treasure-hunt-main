@@ -10,11 +10,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true
   },
-  // Production optimizations
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: process.cwd()
-  }
+  // moved from experimental
+  outputFileTracingRoot: process.cwd()
 };
 
 export default nextConfig;
