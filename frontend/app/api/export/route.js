@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 
-const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || '').replace(/\/+$/, '');
+const BACKEND_URL = (
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  'https://iedc-treasure-hunt-backend.onrender.com'
+).replace(/\/+$/, '');
 
 export async function GET() {
   try {
