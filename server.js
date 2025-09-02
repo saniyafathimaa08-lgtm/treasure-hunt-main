@@ -19,17 +19,30 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
 });
 
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://*.netlify.app',
-    'https://netlify.app',
-    'https://*.onrender.com',
-    'https://*.railway.app',
-    'https://*.vercel.app'
-  ],
-  credentials: true
-}));
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://iedc-treasure-hunt-frontend.onrender.com';
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow server-to-server, curl
+    try {
+      const allowed = [
+        'http://localhost:3000',
+        FRONTEND_URL
+      ];
+      const isRender = /\.onrender\.com$/.test(new URL(origin).hostname);
+      const isAllowed = allowed.includes(origin) || isRender;
+      return callback(isAllowed ? null : new Error('CORS blocked'), isAllowed);
+    } catch {
+      return callback(new Error('CORS origin parse failed'), false);
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads"))); // serve uploaded files
 
