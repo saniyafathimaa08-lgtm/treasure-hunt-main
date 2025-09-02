@@ -23,7 +23,10 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://*.netlify.app',
-    'https://netlify.app'
+    'https://netlify.app',
+    'https://*.onrender.com',
+    'https://*.railway.app',
+    'https://*.vercel.app'
   ],
   credentials: true
 }));
