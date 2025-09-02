@@ -12,7 +12,32 @@ const nextConfig: NextConfig = {
   },
   output: 'standalone',
   // moved from experimental
-  outputFileTracingRoot: process.cwd()
+  outputFileTracingRoot: process.cwd(),
+  async headers() {
+    return [
+      {
+        // Cache static assets aggressively in the browser
+        source: '/:all*(css|js|woff2|ttf|eot|png|jpg|jpeg|gif|svg|webp)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        ]
+      },
+      {
+        // Cache public files (e.g., /public) similarly
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        ]
+      },
+      {
+        // Do not cache API responses that change often
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' }
+        ]
+      }
+    ];
+  }
 };
 
 export default nextConfig;
