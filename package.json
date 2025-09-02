@@ -4,8 +4,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "npx prisma migrate deploy && node server.js",
+    "dev": "npx prisma migrate deploy && node server.js",
     "build": "echo 'No build step required'",
     "postinstall": "npx prisma generate",
     "db:migrate": "npx prisma migrate deploy",
