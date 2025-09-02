@@ -73,22 +73,22 @@ export default function AdminDashboard() {
               <thead>
                 <tr style={{ background: "#a1c4fd" }}>
                   <th style={{ padding: 10, borderRadius: 8 }}>Team Name</th>
-                  <th style={{ padding: 10, borderRadius: 8 }}>User ID</th>
+                  <th style={{ padding: 10, borderRadius: 8 }}>Team ID</th>
                   <th style={{ padding: 10, borderRadius: 8 }}>Members</th>
-                  <th style={{ padding: 10, borderRadius: 8 }}>Progress</th>
+                  <th style={{ padding: 10, borderRadius: 8 }}>Progress Index</th>
                   <th style={{ padding: 10, borderRadius: 8 }}>Selfies</th>
                 </tr>
               </thead>
               <tbody>
-                {teams.map(team => (
+                {Array.isArray(teams) && teams.map(team => (
                   <tr key={team.id} style={{ background: "#fcb69f22" }}>
-                    <td style={{ padding: 10 }}>{team.name}</td>
-                    <td style={{ padding: 10 }}>{team.loginId}</td>
-                    <td style={{ padding: 10 }}>{team.members.map(m => m.name).join(", ")}</td>
-                    <td style={{ padding: 10 }}>{team.progress.map(p => p.node).join(", ")}</td>
+                    <td style={{ padding: 10 }}>{team.teamName || team.name}</td>
+                    <td style={{ padding: 10 }}>{team.id}</td>
+                    <td style={{ padding: 10 }}>{Array.isArray(team.members) ? team.members.map(m => m.name).join(", ") : "-"}</td>
+                    <td style={{ padding: 10 }}>{team.progress?.currentIndex ?? "-"}</td>
                     <td style={{ padding: 10 }}>
-                      {team.selfies.map((s, idx) => (
-                        <img key={idx} src={s.photo} alt={`Selfie ${idx+1}`} style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8, marginRight: 6, boxShadow: "0 2px 8px #a1c4fd" }} />
+                      {Array.isArray(team.selfies) && team.selfies.map((s, idx) => (
+                        <img key={idx} src={s.imageUrl || s.photo} alt={`Selfie ${idx+1}`} style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 8, marginRight: 6, boxShadow: "0 2px 8px #a1c4fd" }} />
                       ))}
                     </td>
                   </tr>
