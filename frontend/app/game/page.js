@@ -639,11 +639,19 @@ function GameContent() {
         }
         
         @media (max-width: 768px) {
-          .game-title { font-size: 2rem; }
-          .game-subtitle { font-size: 1rem; }
-          .fantasy-card { padding: 1.5rem; }
-          .spin-wheel { width: 250px; height: 250px; }
-          .wheel-center { font-size: 2.5rem; }
+          .game-title { font-size: 1.6rem; }
+          .game-subtitle { font-size: 0.95rem; }
+          .fantasy-card { padding: 1rem; }
+          .spin-wheel { width: 220px; height: 220px; }
+          .wheel-center { font-size: 2rem; }
+          .fantasy-input { font-size: 0.95rem; padding: 0.8rem 1rem; }
+          .fantasy-button { padding: 0.8rem 1.2rem; font-size: 0.7rem; }
+        }
+
+        @media (max-width: 420px) {
+          .game-title { font-size: 1.4rem; }
+          .game-subtitle { font-size: 0.9rem; }
+          .spin-wheel { width: 200px; height: 200px; }
         }
       `}</style>
 
