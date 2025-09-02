@@ -239,6 +239,25 @@ app.post("/api/teams/:teamId/selfie", upload.single("selfie"), async (req, res) 
 });
 
 //---------------------------------------
+// ADMIN: LIST TEAMS (members, selfies, progress)
+//---------------------------------------
+app.get("/admin/teams", async (req, res) => {
+  try {
+    const teams = await prisma.team.findMany({
+      include: {
+        members: true,
+        selfies: true,
+        progress: true,
+      },
+      orderBy: { id: "asc" },
+    });
+    res.json({ teams });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch teams" });
+  }
+});
+
+//---------------------------------------
 // ADMIN: EXPORT REGISTRATIONS TO EXCEL
 //---------------------------------------
 app.get("/admin/export", async (req, res) => {
@@ -636,6 +655,42 @@ app.post("/game/:teamId/verify-selfie", upload.single("selfie"), async (req, res
 //---------------------------------------
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
+});
+
+//---------------------------------------
+// ADMIN: EXPORT TEAMS (alias existing export if needed)
+//---------------------------------------
+app.get("/admin/export", async (req, res) => {
+  try {
+    const teams = await prisma.team.findMany({ include: { members: true, selfies: true } });
+    const rows = teams.flatMap(team => {
+      const base = { TeamID: team.id, TeamName: team.teamName, CreatedAt: team.createdAt };
+      const memberRows = team.members.length ? team.members.map(m => ({ ...base, MemberName: m.name })) : [{ ...base, MemberName: "" }];
+      const selfieRows = team.selfies.map(s => ({ ...base, SelfieURL: s.imageUrl, SelfieAt: s.createdAt }));
+      const merged = [];
+      const maxLen = Math.max(memberRows.length, selfieRows.length, 1);
+      for (let i = 0; i < maxLen; i++) {
+        merged.push({
+          ...base,
+          MemberName: memberRows[i]?.MemberName || "",
+          SelfieURL: selfieRows[i]?.SelfieURL || "",
+          SelfieAt: selfieRows[i]?.SelfieAt || "",
+        });
+      }
+      return merged;
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, "Registrations");
+    const xlsBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", "attachment; filename=registrations.xlsx");
+    res.send(xlsBuffer);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to export" });
+  }
 });
 
 const PORT = Number(process.env.PORT || 5000);
