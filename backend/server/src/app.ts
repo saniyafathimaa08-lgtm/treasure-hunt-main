@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 
 const app = express();
 app.use(cors({
-	origin: 'https://treasure-hunt2.netlify.app',
+	origin: 'https://treasure-hunt-2jze.onrender.com',
 	credentials: true
 }));
 app.use(bodyParser.json());
@@ -69,3 +69,4 @@ app.get('/export', async (req, res) => {
 });
 
 export default app;
+
