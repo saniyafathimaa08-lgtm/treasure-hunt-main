@@ -19,7 +19,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
 });
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://iedc-treasure-hunt-frontend.onrender.com';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://treasure-hunt-2jze.onrender.com';
 
 const corsOptions = {
   origin: (origin, callback) => {
