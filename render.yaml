@@ -1,26 +1,26 @@
 services:
   - type: web
-    name: iedc-treasure-hunt-backend
+    name: treasure-hunt-backend
     env: node
     plan: free
     buildCommand: npm install && npx prisma generate
     startCommand: npx prisma db push --accept-data-loss && node server.js
     envVars:
       - key: DATABASE_URL
-        value: postgresql://iedc_treasure_hunt_db_user:TIz8q0sdbRE0ygrwi0Q7GjGZz6tZZOsA@dpg-d2r8mtadbo4c73cvus8g-a.oregon-postgres.render.com/iedc_treasure_hunt_db?sslmode=require
+        value: postgresql://iedc_db_treasure_user:9QtcQAJdTuDNgjsWnshITGet90oZW8sb@dpg-d2vui875r7bs73ar9or0-a.singapore-postgres.render.com/iedc_db_treasure?sslmode=require
       - key: PORT
         value: 5000
       - key: NODE_ENV
         value: production
 
   - type: web
-    name: iedc-treasure-hunt-frontend
+    name: treasure-hunt
     env: node
     plan: free
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && node .next/standalone/server.js
     envVars:
       - key: NEXT_PUBLIC_BACKEND_URL
-        value: https://iedc-treasure-hunt-backend.onrender.com
+        value: https://treasure-hunt-backend-uvzq.onrender.com
       - key: NODE_ENV
         value: production
